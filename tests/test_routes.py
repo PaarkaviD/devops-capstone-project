@@ -14,6 +14,7 @@ from service.models import db, Account, init_db
 from service.routes import app
 from flask_talisman import Talisman
 from service import talisman  # Import talisman from service package
+from flask_cors import CORS  # Import CORS here
 
 # Set up the database URI
 DATABASE_URI = os.getenv(
@@ -26,6 +27,9 @@ HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 
 # Initialize Talisman
 talisman = Talisman(app)
+
+# Initialize CORS
+cors = CORS(app)
 
 
 ######################################################################
@@ -191,6 +195,13 @@ class TestAccountService(TestCase):
         }
         for key, value in headers.items():
             self.assertEqual(response.headers.get(key), value)
+
+    def test_cors_security(self):
+        """It should return a CORS header"""
+        response = self.client.get('/', environ_overrides=HTTPS_ENVIRON)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Check for the CORS header
+        self.assertEqual(response.headers.get('Access-Control-Allow-Origin'), '*')
 
 
 if __name__ == '__main__':

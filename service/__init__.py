@@ -8,6 +8,7 @@ import sys
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
+from flask_cors import CORS  # Import CORS here
 from service.config import Config
 from service.common import log_handlers
 
@@ -17,6 +18,7 @@ app.config.from_object(Config)
 # Initialize extensions
 db = SQLAlchemy(app)
 talisman = Talisman(app)  # Initialize Talisman after app creation
+cors = CORS(app)  # Initialize CORS here
 
 # Import routes, models, and other modules after the app is created
 # pylint: disable=wrong-import-position, cyclic-import, wrong-import-order
